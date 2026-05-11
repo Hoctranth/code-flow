@@ -1,26 +1,60 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Default (Dark Theme) */
+  --app-bg: #0a0a0a;
+  --panel-bg: #1e1e1e;
+  --surface-bg: #181818;
+  --btn-bg: #252525;
+  --btn-hover: #333333;
+  --border-main: #333333;
+  --border-light: #444444;
+  --txt-primary: #d4d4d8;
+  --txt-secondary: #a1a1aa;
+  --txt-muted: #71717a;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-app-bg: var(--app-bg);
+  --color-panel-bg: var(--panel-bg);
+  --color-surface-bg: var(--surface-bg);
+  --color-btn-bg: var(--btn-bg);
+  --color-btn-hover: var(--btn-hover);
+  --color-border-main: var(--border-main);
+  --color-border-light: var(--border-light);
+  --color-txt-primary: var(--txt-primary);
+  --color-txt-secondary: var(--txt-secondary);
+  --color-txt-muted: var(--txt-muted);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+[data-theme='light'] {
+  --app-bg: #f4f4f5;
+  --panel-bg: #ffffff;
+  --surface-bg: #fafafa;
+  --btn-bg: #e4e4e7;
+  --btn-hover: #d4d4d8;
+  --border-main: #e4e4e7;
+  --border-light: #d4d4d8;
+  --txt-primary: #18181b;
+  --txt-secondary: #3f3f46;
+  --txt-muted: #71717a;
+}
+
+[data-theme='dracula'] {
+  --app-bg: #282a36;
+  --panel-bg: #282a36;
+  --surface-bg: #44475a;
+  --btn-bg: #44475a;
+  --btn-hover: #6272a4;
+  --border-main: #44475a;
+  --border-light: #6272a4;
+  --txt-primary: #f8f8f2;
+  --txt-secondary: #8be9fd;
+  --txt-muted: #6272a4;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--app-bg);
+  color: var(--txt-primary);
   font-family: Arial, Helvetica, sans-serif;
 }
