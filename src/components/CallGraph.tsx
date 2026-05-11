@@ -19,13 +19,13 @@ interface CallGraphProps {
 }
 
 function CallGraphInner({ nodes: initialNodes, edges: initialEdges, onNodeClick, algorithm, direction }: CallGraphProps) {
-  const [nodes, setNodes, onNodesChange] = useNodesState<any[]>(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState<any[]>(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState<any>(initialNodes as any);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<any>(initialEdges as any);
 
   // Sync initial nodes when algorithm or code changes
   useEffect(() => {
-    setNodes(initialNodes);
-    setEdges(initialEdges);
+    setNodes(initialNodes as any);
+    setEdges(initialEdges as any);
   }, [initialNodes, initialEdges, algorithm, direction, setNodes, setEdges]);
 
   useLayout(initialNodes, initialEdges, algorithm, direction, setNodes, setEdges);
