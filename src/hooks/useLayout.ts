@@ -15,13 +15,19 @@ export const useLayout = (
   algorithm: LayoutAlgorithm,
   direction: "TB" | "LR",
   setNodes: (nodes: any[]) => void,
-  setEdges: (edges: any[]) => void
+  setEdges: (edges: any[]) => void,
+  setIsLayouting: (isLayouting: boolean) => void
 ) => {
   const { fitView } = useReactFlow();
-  const nodesInitialized = useNodesInitialized();
 
   useEffect(() => {
-    if (!nodes.length) return;
+    if (!nodes.length) {
+      setNodes([]);
+      setEdges([]);
+      return;
+    }
+
+    setIsLayouting(true);
 
     const applyLayout = async () => {
       let layoutedNodes = [...nodes];
@@ -58,6 +64,7 @@ export const useLayout = (
         
         setNodes(layoutedNodes);
         setEdges(layoutedEdges);
+        setIsLayouting(false);
         window.requestAnimationFrame(() => fitView({ duration: 800, padding: 0.2 }));
       } 
       
@@ -91,6 +98,7 @@ export const useLayout = (
         
         setNodes(layoutedNodes);
         setEdges(layoutedEdges);
+        setIsLayouting(false);
         window.requestAnimationFrame(() => fitView({ duration: 800, padding: 0.2 }));
       }
     };
@@ -98,11 +106,13 @@ export const useLayout = (
     if (algorithm !== 'force') {
       applyLayout();
     }
-  }, [nodes, edges, algorithm, direction, setNodes, setEdges, fitView]);
+  }, [nodes, edges, algorithm, direction, setNodes, setEdges, fitView, setIsLayouting]);
 
   // Force Layout (Asynchronous Calculation to prevent UI freezing)
   useEffect(() => {
     if (algorithm !== 'force' || !nodes.length) return;
+
+    setIsLayouting(true);
 
     // Give them a random initial position spread out a bit
     let simNodes = nodes.map(n => ({ ...n, x: Math.random() * 500, y: Math.random() * 500 }));
@@ -126,11 +136,12 @@ export const useLayout = (
         position: { x: n.x || 0, y: n.y || 0 }
       }))]);
 
+      setIsLayouting(false);
       window.requestAnimationFrame(() => fitView({ duration: 800, padding: 0.2 }));
     });
 
     return () => {
       simulation.stop();
     };
-  }, [nodes, edges, algorithm, setNodes, fitView]);
+  }, [nodes, edges, algorithm, setNodes, fitView, setIsLayouting]);
 };

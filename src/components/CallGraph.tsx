@@ -21,17 +21,21 @@ interface CallGraphProps {
 function CallGraphInner({ nodes: initialNodes, edges: initialEdges, onNodeClick, algorithm, direction }: CallGraphProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<any>(initialNodes as any);
   const [edges, setEdges, onEdgesChange] = useEdgesState<any>(initialEdges as any);
+  const [isLayouting, setIsLayouting] = React.useState(false);
 
-  // Sync initial nodes when algorithm or code changes
-  useEffect(() => {
-    setNodes(initialNodes as any);
-    setEdges(initialEdges as any);
-  }, [initialNodes, initialEdges, algorithm, direction, setNodes, setEdges]);
-
-  useLayout(initialNodes, initialEdges, algorithm, direction, setNodes, setEdges);
+  useLayout(initialNodes, initialEdges, algorithm, direction, setNodes, setEdges, setIsLayouting);
 
   return (
-    <ReactFlow
+    <div className="w-full h-full relative">
+      {isLayouting && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-app-bg/50 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-3 bg-panel-bg p-6 rounded-xl border border-border-main shadow-2xl">
+            <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+            <span className="text-emerald-500 font-medium text-sm animate-pulse">Calculating layout...</span>
+          </div>
+        </div>
+      )}
+      <ReactFlow
       nodes={nodes}
       edges={edges}
       onNodesChange={onNodesChange}
@@ -56,7 +60,8 @@ function CallGraphInner({ nodes: initialNodes, edges: initialEdges, onNodeClick,
           opacity: 0.8
         }} 
       />
-    </ReactFlow>
+      </ReactFlow>
+    </div>
   );
 }
 
