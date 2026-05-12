@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Editor, { OnMount } from "@monaco-editor/react";
 import CallGraph from "@/components/CallGraph";
+import SystemFlow from "@/components/SystemFlow";
 import { parseCode, NodeData, EdgeData } from "./actions";
 import { LayoutAlgorithm } from "@/hooks/useLayout";
 import lzString from "lz-string";
@@ -61,6 +62,7 @@ export default function Home() {
   };
 
   // View state
+  const [activeTab, setActiveTab] = useState<"code-analyzer" | "system-flow">("code-analyzer");
   const [direction, setDirection] = useState<"TB" | "LR">("TB");
   const [algorithm, setAlgorithm] = useState<LayoutAlgorithm>("dagre");
   const [showEditor, setShowEditor] = useState(true);
@@ -109,9 +111,29 @@ export default function Home() {
   }, [code, direction]);
 
   return (
-    <div className="flex h-screen w-full bg-app-bg text-txt-primary font-sans overflow-hidden transition-colors duration-300">
-      
-      {/* Left Sidebar: Monaco Editor */}
+    <div className="flex flex-col h-screen w-full bg-app-bg text-txt-primary font-sans overflow-hidden transition-colors duration-300">
+      {/* Header Tabs */}
+      <div className="flex items-center justify-center p-2 bg-panel-bg border-b border-border-main z-30 shadow-sm relative shrink-0">
+        <div className="flex bg-surface-bg border border-border-main rounded-md p-1 shadow-sm">
+          <button
+            onClick={() => setActiveTab("code-analyzer")}
+            className={`px-4 py-1.5 text-sm font-medium rounded-sm transition-colors ${activeTab === "code-analyzer" ? "bg-emerald-600/20 text-emerald-500 shadow" : "text-txt-secondary hover:bg-btn-hover"}`}
+          >
+            Code Analyzer
+          </button>
+          <button
+            onClick={() => setActiveTab("system-flow")}
+            className={`px-4 py-1.5 text-sm font-medium rounded-sm transition-colors ${activeTab === "system-flow" ? "bg-emerald-600/20 text-emerald-500 shadow" : "text-txt-secondary hover:bg-btn-hover"}`}
+          >
+            System Flow
+          </button>
+        </div>
+      </div>
+
+      <div className="flex flex-1 overflow-hidden relative w-full h-full">
+        {activeTab === "code-analyzer" ? (
+          <>
+            {/* Left Sidebar: Monaco Editor */}
       {showEditor && (
         <div className="w-[400px] h-full flex flex-col bg-panel-bg border-r border-border-main shrink-0 z-10 shadow-2xl relative transition-colors duration-300">
           <div className="px-4 py-3 bg-surface-bg border-b border-border-main flex items-center justify-between transition-colors duration-300">
@@ -237,6 +259,13 @@ export default function Home() {
           )}
           <CallGraph key={`${direction}-${algorithm}`} nodes={nodes} edges={edges} onNodeClick={handleNodeClick} algorithm={algorithm} direction={direction} theme={theme} />
         </div>
+      </div>
+          </>
+        ) : (
+          <div className="flex-1 w-full h-full p-4 bg-app-bg">
+            <SystemFlow />
+          </div>
+        )}
       </div>
     </div>
   );
